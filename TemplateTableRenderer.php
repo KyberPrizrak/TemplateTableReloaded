@@ -265,7 +265,7 @@ class TemplateTableRenderer {
         foreach ($this->headers as $header) {
           $cellValue = '';
           if (isset($item[$header])) {
-            $cellValue = isset($item[$header]);
+            $cellValue = $item[$header];
           }
           $output .= '<td>';
           $output .= $this->format($this->cellFormatter, $header, $cellValue);
@@ -287,7 +287,6 @@ class TemplateTableRenderer {
   }
 
   private function format($title, $name, $value=null) {
-    $result;
     if (is_null($title)) {
       if (is_null($value)) {
         $result = $name;

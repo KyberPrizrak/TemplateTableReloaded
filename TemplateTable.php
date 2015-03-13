@@ -31,6 +31,8 @@ function wfTemplateTableInit($parser) {
 $wgHooks['BeforePageDisplay'][] = 'wfTemplateTableLoadAssets';
 function wfTemplateTableLoadAssets($out, $skin) {
   $out->addModules('ext.TemplateTableReloaded');
+
+  return true;
 }
 
 $wgResourceModules['ext.TemplateTableReloaded'] = array(
