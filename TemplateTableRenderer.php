@@ -10,6 +10,8 @@
 
 class TemplateTableRenderer {
   private $templateTitle;
+  private $redirects;
+
   private $headers;
   private $dynamicHeaders;
   private $categories;
@@ -19,6 +21,7 @@ class TemplateTableRenderer {
   private $headerFormatter;
   private $cellFormatter;
   private $attributes;
+
   private $parserOptions;
 
   private $pages;
@@ -54,10 +57,32 @@ class TemplateTableRenderer {
       $errors[] = 'No template specified.';
     } else {
       $this->templateTitle = Title::newFromText($templateName, NS_TEMPLATE);
+
       if (is_null($this->templateTitle)) {
         $errors[] = 'Template "' . $templateName . '" not a valid title.';
       } elseif (!$this->templateTitle->inNamespace(NS_TEMPLATE)) {
         $errors[] = 'Template "' . $templateName . '" not in Template namespace.';
+      } else {
+        $dbr = wfGetDB(DB_SLAVE);
+        $redirects = $dbr->select(
+          array('page', 'redirect'),
+          array('page_title', 'page_namespace'),
+          array(
+            'rd_namespace' => NS_TEMPLATE,
+            'rd_title' => $this->templateTitle->getDBkey()
+          ),
+          __METHOD__,
+          array(),
+          array('redirect' => array('INNER JOIN', array('page_id=rd_from')))
+        );
+
+        $this->redirects = array();
+        foreach ($redirects as $redirect) {
+          $this->redirects[] = Title::makeTitle(
+            $redirect->page_namespace,
+            $redirect->page_title
+          );
+        }
       }
     }
 
@@ -191,8 +216,20 @@ class TemplateTableRenderer {
         $pieceName = trim($localFrame->expand($call['piece']['title']));
         $pieceTitle = Title::newFromText($pieceName, NS_TEMPLATE);
 
-        if (is_null($pieceTitle) || !$pieceTitle->equals($this->templateTitle)) {
+        if (is_null($pieceTitle)) {
           continue;
+        }
+        if (!$pieceTitle->equals($this->templateTitle)) {
+          $isRedirect = false;
+          foreach ($this->redirects as $redirect) {
+            if ($pieceTitle->equals($redirect)) {
+              $isRedirect = true;
+              break;
+            }
+          }
+          if (!$isRedirect) {
+            continue;
+          }
         }
 
         $item = array();

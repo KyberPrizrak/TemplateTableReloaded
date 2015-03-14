@@ -1,4 +1,4 @@
-The TemplateTableReloaded extension that creates tables based on template data.  This extension improves on the TemplateTable extension, but it is not a drop-in replacement.
+The TemplateTableReloaded extension displays tables based on template data.  This extension improves on the TemplateTable extension, but it is not a drop-in replacement.
 
 ## Installation
 
