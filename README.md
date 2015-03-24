@@ -50,7 +50,11 @@ This limits the number of rows returned.  There are some administrator controlle
 
 ### categories
 
-This is an optional pipe (|) delimited list of categories.  If specified, each page must be in every listed category to qualify for display.
+This is an optional, pipe (|) delimited list of categories.  If specified, each page must be in every listed category to qualify for display.  If a category is prefixed with `!`, all pages in that category are excluded.
+
+For example, `categories=Cat1|!Cat2|Cat3` will include pages in both Cat1 and Cat3, but exclude any pages also in Cat2.
+
+If you have a category with a name starting with `!`, you can reference it with the namespace to prevent the exclusion behavior.  For example, `categries=Category:!Cat2` will require `!Cat2` instead of excluding `Cat2`.
 
 ### caption
 

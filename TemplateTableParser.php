@@ -1,6 +1,6 @@
 <?php
 /**
- * TemplateTableRenderer
+ * TemplateTableParser
  *
  * Copyright 2015 Rusty Burchfield
  *

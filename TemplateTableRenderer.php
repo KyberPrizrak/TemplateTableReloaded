@@ -15,6 +15,7 @@ class TemplateTableRenderer {
   private $headers;
   private $dynamicHeaders;
   private $categories;
+  private $excludeCategories;
   private $rowLimit;
   private $caption;
   private $hideArticle;
@@ -107,10 +108,16 @@ class TemplateTableRenderer {
     }
 
     $this->categories = array();
+    $this->excludeCategories = array();
     if (isset($args['categories']) && trim($args['categories'])) {
       $categories = explode('|', $args['categories']);
 
       foreach ($categories as $category) {
+        $category = trim($category);
+        $exclude = substr($category, 0, 1) == '!';
+        if ($exclude) {
+          $category = substr($category, 1);
+        }
         $title = Title::newFromText(trim($category), NS_CATEGORY);
 
         if (is_null($title)) {
@@ -118,7 +125,11 @@ class TemplateTableRenderer {
         } elseif (!$title->inNamespace(NS_CATEGORY)) {
           $errors[] = 'Category "' . $category . '" not in Category namespace.';
         } else {
-          $this->categories[] = $title->getDBkey();
+          if ($exclude) {
+            $this->excludeCategories[] = $title->getDBkey();
+          } else {
+            $this->categories[] = $title->getDBkey();
+          }
         }
       }
     }
@@ -186,6 +197,17 @@ class TemplateTableRenderer {
       $tables[$table] = 'categorylinks';
       $filter[$table . '.cl_to'] = $category;
       $joins[$table] = array('INNER JOIN', array($table . '.cl_from=page_id'));
+      $categoryID += 1;
+    }
+
+    foreach ($this->excludeCategories as $category) {
+      $table = "cl$categoryID";
+      $tables[$table] = 'categorylinks';
+      $filter[$table . '.cl_to'] = null;
+      $joins[$table] = array(
+        'LEFT JOIN',
+        array($table . '.cl_from=page_id', $table . '.cl_to' => $category)
+      );
       $categoryID += 1;
     }
 
