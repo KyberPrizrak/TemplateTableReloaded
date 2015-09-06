@@ -24,6 +24,12 @@ The default classes variable is used to specify classes you want in the `class` 
 
 The tag name is configurable in case you prefer a different name or there is a name conflict with other extensions.
 
+## Special Page
+
+The special page is called Special:TemplateTable and it supports most of the options the tag supports.
+
+This page is useful for looking up content or linking to a table without creating a page specifically to hold a table.
+
 ## Usage Options
 
 The only required input is the template name between the `<ttable>` and `</ttable>` tags.  All other parameter are optional.  In some cases they should not be mentioned at all if you want the default behavior (eg. headers="" is not the same as not specifying headers at all).
