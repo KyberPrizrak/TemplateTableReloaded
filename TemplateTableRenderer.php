@@ -29,6 +29,13 @@ class TemplateTableRenderer {
   private $templateData;
 
   public static function execute($input, $args, $parserOptions) {
+    global $wgTemplateTableParseDepth;
+
+    if ($wgTemplateTableParseDepth != 0) {
+      return '<!-- Skipping ttable expansion to prevent recursion. -->';
+    }
+    $wgTemplateTableParseDepth += 1;
+
     $renderer = new TemplateTableRenderer();
     $errors = $renderer->parseArgs($input, $args, $parserOptions);
 
@@ -39,13 +46,16 @@ class TemplateTableRenderer {
       }
       $output .= '</div>';
 
+      $wgTemplateTableParseDepth -= 1;
       return $output;
     }
 
     $renderer->fetchPages();
     $renderer->parsePages();
+    $result = $renderer->render();
 
-    return $renderer->render();
+    $wgTemplateTableParseDepth -= 1;
+    return $result;
   }
 
   private function parseArgs($input, $args, $parserOptions) {

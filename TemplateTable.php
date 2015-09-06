@@ -52,6 +52,9 @@ $wgResourceModules['ext.TemplateTableReloaded'] = array(
   'remoteExtPath' => basename(__DIR__)
 );
 
+$wgTemplateTableParseDepth = 0;
+
+/* Options */
 $wgTemplateTableDefaultRowLimit = 500;
 $wgTemplateTableMaxRowLimit = 1000;
 $wgTemplateTableDefaultClasses = 'wikitable';
