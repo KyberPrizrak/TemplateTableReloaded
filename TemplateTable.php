@@ -19,13 +19,23 @@ $wgExtensionCredits['parserhook'][] = array(
 
 $wgAutoloadClasses['TemplateTableRenderer'] = __DIR__ . '/TemplateTableRenderer.php';
 $wgAutoloadClasses['TemplateTableParser'] = __DIR__ . '/TemplateTableParser.php';
+$wgAutoloadClasses['SpecialTemplateTable'] = __DIR__ . '/SpecialTemplateTable.php';
+
+$wgSpecialPages['TemplateTable'] = 'SpecialTemplateTable';
 
 $wgHooks['ParserFirstCallInit'][] = 'wfTemplateTableInit';
 function wfTemplateTableInit($parser) {
   global $wgTemplateTableTagName;
-  $parser->setHook($wgTemplateTableTagName, 'TemplateTableRenderer::execute');
+  $parser->setHook($wgTemplateTableTagName, 'wfTemplateTableParserHook');
 
   return true;
+}
+
+function wfTemplateTableParserHook($input, $args, $parser, $frame) {
+  $parserOptions = $parser->getOptions();
+  $wikiText = TemplateTableRenderer::execute($input, $args, $parserOptions);
+
+  return $parser->recursiveTagParse($wikiText, $frame);
 }
 
 $wgHooks['BeforePageDisplay'][] = 'wfTemplateTableLoadAssets';

@@ -28,9 +28,9 @@ class TemplateTableRenderer {
   private $pages;
   private $templateData;
 
-  public static function execute($input, $args, $parser, $frame) {
+  public static function execute($input, $args, $parserOptions) {
     $renderer = new TemplateTableRenderer();
-    $errors = $renderer->parseArgs($input, $args, $parser);
+    $errors = $renderer->parseArgs($input, $args, $parserOptions);
 
     if (!empty($errors)) {
       $output = '<div style="color: red;">ttable error(s):' . "\n";
@@ -38,16 +38,17 @@ class TemplateTableRenderer {
         $output .= '* ' . $error . "\n";
       }
       $output .= '</div>';
-      return $parser->recursiveTagParse($output, $frame);
+
+      return $output;
     }
 
     $renderer->fetchPages();
     $renderer->parsePages();
 
-    return $renderer->render($parser, $frame);
+    return $renderer->render();
   }
 
-  private function parseArgs($input, $args, $parser) {
+  private function parseArgs($input, $args, $parserOptions) {
     global $wgTemplateTableDefaultRowLimit, $wgTemplateTableMaxRowLimit,
       $wgTemplateTableDefaultClasses;
 
@@ -169,7 +170,7 @@ class TemplateTableRenderer {
     }
     $this->attributes['class'] .= ' ttable';
 
-    $this->parserOptions = $parser->getOptions();
+    $this->parserOptions = $parserOptions;
 
     return $errors;
   }
@@ -277,7 +278,7 @@ class TemplateTableRenderer {
     }
   }
 
-  private function render($parser, $frame) {
+  private function render() {
     $output = '';
 
     if (!empty($this->templateData) && (!empty($this->headers) || !$this->hideArticle)) {
@@ -342,7 +343,7 @@ class TemplateTableRenderer {
       $output .= 'Template "' . $this->templateTitle->getText() . '" has no data.';
     }
 
-    return $parser->recursiveTagParse($output, $frame);
+    return $output;
   }
 
   private function format($title, $name, $value=null) {
