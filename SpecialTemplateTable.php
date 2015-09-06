@@ -40,17 +40,16 @@ and what values it is supplied.  For additional details, visit
 <a target="_blank" href="https://www.mediawiki.org/wiki/Extension:TemplateTableReloaded">TemplateTableReloaded on mediawiki.org</a>.
 EOM;
     $output->addHTML($topMessage);
-    $output->addHTML($this->generateForm($template, $args));
+    $output->addHTML($this->generateForm($template, $request));
 
     if (!empty($template)) {
       $parserOpts = ParserOptions::newFromContext($output->getContext());
       $table = TemplateTableRenderer::execute($template, $args, $parserOpts);
+      $output->addWikiText($table);
     }
-
-    $output->addWikiText($table);
   }
 
-  private function generateForm($template, $args) {
+  private function generateForm($template, $request) {
     global $wgScript;
     $selfTitle = SpecialPage::getTitleFor($this->getName());
 
@@ -60,11 +59,11 @@ EOM;
     );
     $out .= Html::hidden('title', $selfTitle->getPrefixedDbKey());
 
-    if (!empty($args['caption'])) {
-      $out .= Html::hidden('caption', $args['caption']);
+    if ($request->getVal('caption', '') != '') {
+      $out .= Html::hidden('caption', $request->getVal('caption', ''));
     }
-    if (!empty($args['class'])) {
-      $out .= Html::hidden('class', $args['class']);
+    if ($request->getVal('class', '') != '') {
+      $out .= Html::hidden('class', $request->getVal('class', ''));
     }
 
     $out .= Xml::openElement('fieldset');
@@ -80,7 +79,7 @@ EOM;
     $out .= "<td class='mw-label'>" .
       Xml::label('Headers', 'tt-headers') .
       "</td><td class='mw-input'>" .
-      Xml::input('headers', 30, $args['headers'], array('id' => 'tt-headers')) .
+      Xml::input('headers', 30, $request->getVal('headers', ''), array('id' => 'tt-headers')) .
       "</td>";
     $out .= Xml::closeElement('tr');
 
@@ -91,18 +90,18 @@ EOM;
       Xml::input(
         'categories',
         30,
-        $args['categories'],
+        $request->getVal('categories', ''),
         array('id' => 'tt-categories')
       ) . "</td>";
     $out .= "<td class='mw-label'>" .
       Xml::label('Limit', 'tt-limit') .
       "</td><td class='mw-input'>" .
-      Xml::input('limit', 5, $args['limit'], array('id' => 'tt-limit')) . ' ' .
+      Xml::input('limit', 5, $request->getVal('limit', ''), array('id' => 'tt-limit')) . ' ' .
       Xml::checkLabel(
         'Hide article',
         'hidearticle',
         'tt-hidearticle',
-        !empty($args['hidearticle'])
+        ($request->getVal('hidearticle', '') != '')
       ) . "</td>";
     $out .= Xml::closeElement('tr');
 
@@ -113,7 +112,7 @@ EOM;
       Xml::input(
         'headerformatter',
         30,
-        $args['headerformatter'],
+        $request->getVal('headerformatter', ''),
         array('id' => 'tt-headerformatter')
       ) . "</td>";
     $out .= "<td class='mw-label'>" .
@@ -122,7 +121,7 @@ EOM;
       Xml::input(
         'cellformatter',
         30,
-        $args['cellformatter'],
+        $request->getVal('cellformatter', ''),
         array('id' => 'tt-cellformatter')
       ) . "</td>";
     $out .= Xml::closeElement('tr');
