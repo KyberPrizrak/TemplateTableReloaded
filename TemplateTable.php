@@ -8,10 +8,10 @@
  * Licensed under GPLv2 or later (see COPYING)
  */
 
-$wgExtensionCredits['parserhook'][] = array(
+$wgExtensionCredits['specialpage'][] = $wgExtensionCredits['parserhook'][] = array(
   'path' => __FILE__,
   'name' => 'TemplateTableReloaded',
-  'version' => '1.3',
+  'version' => '2.0',
   'url' => 'https://www.mediawiki.org/wiki/Extension:TemplateTableReloaded',
   'author' => array('CS "Kainaw" Wagner', 'Rusty Burchfield'),
   'description' => 'Render a table of parameters passed to a template.',
