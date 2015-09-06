@@ -332,10 +332,10 @@ class TemplateTableRenderer {
         }
         $output .= "</tr>\n";
       }
-      $output .= "</table>\n";
+      $output .= '</table>';
 
       if (count($this->templateData) == $this->rowLimit) {
-        $output .= '<small>Table output limited to ' . $this->rowLimit;
+        $output .= "\n" . '<small>Table output limited to ' . $this->rowLimit;
         $output .= ' results.</small>' . "\n";
       }
     } else {
