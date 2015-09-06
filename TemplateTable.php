@@ -21,7 +21,9 @@ $wgAutoloadClasses['TemplateTableRenderer'] = __DIR__ . '/TemplateTableRenderer.
 $wgAutoloadClasses['TemplateTableParser'] = __DIR__ . '/TemplateTableParser.php';
 $wgAutoloadClasses['SpecialTemplateTable'] = __DIR__ . '/SpecialTemplateTable.php';
 
+$wgMessagesDirs['TemplateTable'] = __DIR__ . "/i18n";
 $wgSpecialPages['TemplateTable'] = 'SpecialTemplateTable';
+$wgSpecialPageGroups['TemplateTable'] = 'pages';
 
 $wgHooks['ParserFirstCallInit'][] = 'wfTemplateTableInit';
 function wfTemplateTableInit($parser) {
