@@ -51,11 +51,14 @@ EOM;
   }
 
   private function generateForm($template, $args) {
+    global $wgScript;
+    $selfTitle = SpecialPage::getTitleFor($this->getName());
+
     $out = Xml::openElement(
       'form',
-      array('method' => 'get', 'action' => $this->getConfig()->get('Script'))
+      array('method' => 'get', 'action' => $wgScript)
     );
-    $out .= Html::hidden('title', $this->getPageTitle()->getPrefixedText());
+    $out .= Html::hidden('title', $selfTitle->getPrefixedDbKey());
 
     if (!empty($args['caption'])) {
       $out .= Html::hidden('caption', $args['caption']);
