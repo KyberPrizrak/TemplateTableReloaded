@@ -11,9 +11,9 @@
 $wgExtensionCredits['specialpage'][] = $wgExtensionCredits['parserhook'][] = array(
   'path' => __FILE__,
   'name' => 'TemplateTableReloaded',
-  'version' => '2.1',
+  'version' => '2.2',
   'url' => 'https://www.mediawiki.org/wiki/Extension:TemplateTableReloaded',
-  'author' => array('CS "Kainaw" Wagner', 'Rusty Burchfield'),
+  'author' => array('Rusty Burchfield'),
   'description' => 'Render a table of parameters passed to a template.',
 );
 
