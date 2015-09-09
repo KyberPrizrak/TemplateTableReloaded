@@ -241,7 +241,7 @@ class TemplateTableRenderer {
       $pageTitle = Title::makeTitle($page->page_namespace, $page->page_title);
 
       $templateParser->clearCallData();
-      $templateParser->parse($page->old_text, $pageTitle, $this->parserOptions);
+      $templateParser->preprocess($page->old_text, $pageTitle, $this->parserOptions);
       $callData = $templateParser->getCallData();
 
       foreach ($callData as $call) {
