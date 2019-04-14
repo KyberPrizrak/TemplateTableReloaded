@@ -185,7 +185,7 @@ class TemplateTableRenderer {
 
     if(isset($args['filter']) && trim(@$args['filter']))
     {
-      foreach(explode(';', $args['filter']) as $filterItem)
+      foreach(explode('|', $args['filter']) as $filterItem)
       {
         $filterItemPieces = explode('=', $filterItem, 2);
         if(isset($filterItemPieces[0]) && isset($filterItemPieces[1]))
