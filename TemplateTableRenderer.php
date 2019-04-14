@@ -304,7 +304,10 @@ class TemplateTableRenderer {
           }
 
           if ($this->dynamicHeaders && !in_array($name, $this->headers)) {
-            $this->headers[] = $name;
+            if(!isset($this->filter[$name]))
+            {
+              $this->headers[] = $name;
+            }
           }
         }
         if($skipItem){continue;}
@@ -404,3 +407,4 @@ class TemplateTableRenderer {
     return $result;
   }
 }
+
