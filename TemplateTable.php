@@ -34,6 +34,8 @@ function wfTemplateTableInit($parser) {
 }
 
 function wfTemplateTableParserHook($input, $args, $parser, $frame) {
+  $input = $parser->recursiveTagParse($input, $frame);
+  foreach($args as $k=>$v){$args[$k] = $parser->recursiveTagParse($v, $frame);}
   $parserOptions = $parser->getOptions();
   $wikiText = TemplateTableRenderer::execute($input, $args, $parserOptions);
 
@@ -61,3 +63,4 @@ $wgTemplateTableDefaultRowLimit = 500;
 $wgTemplateTableMaxRowLimit = 1000;
 $wgTemplateTableDefaultClasses = 'wikitable';
 $wgTemplateTableTagName = 'ttable';
+
