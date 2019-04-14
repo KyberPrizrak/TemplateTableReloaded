@@ -363,7 +363,7 @@ class TemplateTableRenderer {
             $cellValue = $item[$header];
           }
           $output .= '<td>';
-          $output .= $this->format($this->cellFormatter, $header, $cellValue);
+          $output .= $this->format($this->cellFormatter, $header, $cellValue, $title->getFullText());
           $output .= '</td>' . "\n";
         }
         $output .= "</tr>\n";
@@ -381,7 +381,7 @@ class TemplateTableRenderer {
     return $output;
   }
 
-  private function format($title, $name, $value=null) {
+  private function format($title, $name, $value=null, $articleLink=null) {
     if (is_null($title)) {
       if (is_null($value)) {
         $result = $name;
@@ -390,9 +390,9 @@ class TemplateTableRenderer {
       }
     } else {
       if (is_null($value)) {
-        $result = '{{' . $title->getFullText() . '|' . $name . '}}';
+        $result = '{{' . $title->getFullText() . '|' . $name.(is_null($articleLink) ? '' : '|article='.$articleLink) . '}}';
       } else {
-        $result = '{{' . $title->getFullText() . '|' . $name . '|2=' . $value . '}}';
+        $result = '{{' . $title->getFullText() . '|' . $name . '|2=' . $value.(is_null($articleLink) ? '' : '|article='.$articleLink) . '}}';
       }
     }
 
