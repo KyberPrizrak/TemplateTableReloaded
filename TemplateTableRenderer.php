@@ -22,6 +22,7 @@ class TemplateTableRenderer {
   private $headerFormatter;
   private $cellFormatter;
   private $attributes;
+  private $filter;
 
   private $parserOptions;
 
@@ -180,6 +181,25 @@ class TemplateTableRenderer {
     }
     $this->attributes['class'] .= ' ttable';
 
+    $this->filter = array();
+
+    if(isset($args['filter']) && trim(@$args['filter']))
+    {
+      foreach(explode(';', $args['filter']) as $filterItem)
+      {
+        $filterItemPieces = explode('=', $filterItem, 2);
+        if(isset($filterItemPieces[0]) && isset($filterItemPieces[1]))
+        {
+          $filterItemName = trim($filterItemPieces[0]);
+          $filterItemValue = trim($filterItemPieces[1]);
+          if(strlen($filterItemName) && strlen($filterItemValue))
+          {
+            $this->filter[$filterItemName] = $filterItemValue;
+          }
+        }
+      }
+    }
+
     $this->parserOptions = $parserOptions;
 
     return $errors;
@@ -268,6 +288,7 @@ class TemplateTableRenderer {
         $item = array();
         $parts = $call['piece']['parts'];
         $partsLength = $parts->getLength();
+        $skipItem = false;
         for ($i = 0; $i < $partsLength; $i++) {
           $bits = $parts->item($i)->splitArg();
           $name = strval($bits['index']);
@@ -277,12 +298,16 @@ class TemplateTableRenderer {
 
           $value = trim($localFrame->expand($bits['value']));
           $item[$name] = $value;
+          if(isset($this->filter[$name]))
+          {
+            if($this->filter[$name]!=$value){$skipItem = true;break;}
+          }
 
           if ($this->dynamicHeaders && !in_array($name, $this->headers)) {
             $this->headers[] = $name;
           }
         }
-
+        if($skipItem){continue;}
         $this->templateData[] = array('title' => $pageTitle, 'item' => $item);
       }
     }
